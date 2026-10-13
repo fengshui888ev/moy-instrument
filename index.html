@@ -1,340 +1,281 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Карта Васту квартиры</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Что рассказывает ваша квартира? — Мини-аудит Васту</title>
 
 <style>
-:root{
-  --bg:#fbf4ec;
-  --p:#fffaf5;
-  --r:#f1d6cf;
-  --w:#94312f;
-  --d:#642321;
-  --g:#b78339;
-  --l:#ead8ce;
-  --t:#302925;
-  --m:#756b65;
+:root {
+  --bg: #eadbd6;
+  --card: #f9f1ed;
+  --white: #fffaf8;
+  --accent: #b65d49;
+  --dark: #744e47;
+  --text: #684f49;
+  --line: #dbc1b8;
+  --soft: #f0dcd5;
 }
 
-*{
-  box-sizing:border-box;
+* {
+  box-sizing: border-box;
 }
 
-body{
-  margin:0;
-  background:linear-gradient(#fbf3ea,#fff);
-  color:var(--t);
-  font-family:Arial,sans-serif;
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-.wrap{
-  max-width:900px;
-  margin:auto;
-  padding:18px;
+.container {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 12px;
 }
 
-.box{
-  background:var(--p);
-  border:1px solid var(--l);
-  border-radius:28px;
-  padding:24px;
-  margin:18px 0;
-  box-shadow:0 14px 38px #6b3d2512;
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 12px;
 }
 
-h1,h2,h3{
-  font-family:Georgia,serif;
-  color:var(--d);
+h1, h2, h3 {
+  font-family: Georgia, serif;
+  color: var(--dark);
+  line-height: 1.18;
 }
 
-h1{
-  font-size:clamp(36px,7vw,60px);
-  line-height:1;
-  margin:.2em 0;
+h1 {
+  font-size: 29px;
+  margin: 10px 0 14px;
 }
 
-.eye,
-.badge{
-  font-size:12px;
-  font-weight:700;
-  color:var(--w);
-  text-transform:uppercase;
+h2 {
+  font-size: 22px;
+  margin: 16px 0 10px;
 }
 
-.lead{
-  font-size:18px;
-  line-height:1.55;
+h3 {
+  font-size: 19px;
+  margin: 10px 0;
 }
 
-.note{
-  padding:14px;
-  border-left:4px solid var(--g);
-  background:#f8e8e2;
-  border-radius:14px;
+p {
+  margin: 10px 0;
 }
 
-.top{
-  display:flex;
-  justify-content:space-between;
-  color:var(--m);
-  font-size:12px;
+.kicker {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.prog{
-  height:9px;
-  background:#eee1d9;
-  border-radius:99px;
-  overflow:hidden;
+.note {
+  background: var(--soft);
+  border-left: 3px solid var(--accent);
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-top: 16px;
 }
 
-.prog i{
-  display:block;
-  height:100%;
-  background:linear-gradient(90deg,var(--w),var(--g));
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #896f67;
+  margin-bottom: 8px;
 }
 
-.scr{
-  display:none;
+.progress {
+  height: 7px;
+  background: #dfcbc4;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-.scr.on{
-  display:block;
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width .25s;
 }
 
-.q{
-  font-size:27px;
-  margin:24px 0 6px;
+.question {
+  font-size: 21px;
+  margin: 20px 0 10px;
 }
 
-.hint,
-.why{
-  color:var(--m);
-  line-height:1.45;
+.hint {
+  color: #8b7169;
+  font-size: 12px;
+  margin-bottom: 14px;
 }
 
-.opts{
-  display:grid;
-  gap:9px;
-  margin-top:16px;
+.option {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--text);
+  font-size: 13px;
+  font-family: Arial, sans-serif;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;
 }
 
-.opt{
-  width:100%;
-  padding:14px;
-  border:1px solid var(--l);
-  border-radius:15px;
-  background:#fff;
-  text-align:left;
-  font-weight:700;
-  cursor:pointer;
+.option.selected {
+  background: var(--soft);
+  border-color: var(--accent);
+  font-weight: bold;
 }
 
-.opt.sel{
-  background:#f7e4df;
-  border-color:var(--w);
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
 }
 
-.act{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  margin-top:20px;
+.btn {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 30px;
+  padding: 12px 8px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.btn{
-  flex:1 1 0;
-  min-width:0;
-  border:0;
-  border-radius:99px;
-  padding:13px 20px;
-  font-weight:700;
-  cursor:pointer;
+.btn-main {
+  background: var(--accent);
+  color: white;
 }
 
-.pri{
-  background:var(--w);
-  color:white;
+.btn-back {
+  background: #e5d3cc;
+  color: var(--dark);
 }
 
-.sec{
-  background:#efe1d9;
+.btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
 }
 
-.btn:disabled{
-  opacity:.4;
-  cursor:not-allowed;
+#result {
+  display: none;
 }
 
-.res{
-  display:none;
+.sector {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 15px;
+  margin: 12px 0;
 }
 
-.res.on{
-  display:block;
+.sector h3 {
+  margin-top: 0;
 }
 
-.event{
-  border:1px solid var(--l);
-  border-radius:20px;
-  padding:17px;
-  margin:12px 0;
+.status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: var(--soft);
+  color: var(--dark);
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
-.badge{
-  display:inline-block;
-  background:var(--r);
-  padding:7px 10px;
-  border-radius:99px;
+.positive {
+  border-left: 3px solid #9a9875;
+  padding-left: 11px;
+  margin: 12px 0;
 }
 
-.cta{
-  background:linear-gradient(135deg,var(--d),var(--w));
-  color:#fff;
-  border-radius:20px;
-  padding:20px;
-  margin-top:16px;
+.negative {
+  border-left: 3px solid var(--accent);
+  padding-left: 11px;
+  margin: 12px 0;
 }
 
-.cta h3{
-  color:#fff;
+.sector-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--dark);
 }
 
-.cta a{
-  display:inline-block;
-  background:#fff;
-  color:var(--d);
-  padding:11px 17px;
-  border-radius:99px;
-  text-decoration:none;
-  font-weight:700;
+.small {
+  font-size: 12px;
+  color: #896f67;
 }
 
-.small{
-  text-align:center;
-  color:#8b7d75;
-  font-size:12px;
-  line-height:1.5;
+.cta {
+  background: var(--dark);
+  color: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: 20px;
 }
 
-/* Мобильная версия */
-
-html,
-body{
-  margin:0!important;
-  padding:0!important;
-  background:#eadbd6!important;
-  overflow-x:hidden!important;
+.cta h2 {
+  color: white;
 }
 
-.wrap{
-  max-width:480px!important;
-  margin:0 auto!important;
-  padding:10px!important;
+.cta a {
+  display: block;
+  text-align: center;
+  background: white;
+  color: var(--dark);
+  padding: 13px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 15px;
 }
 
-.box{
-  padding:16px!important;
-  margin:10px 0!important;
-  border-radius:18px!important;
-  box-shadow:none!important;
+.footer {
+  font-size: 11px;
+  color: #866e66;
+  text-align: center;
+  padding: 8px;
 }
 
-h1{
-  font-size:30px!important;
-  line-height:1.05!important;
-  margin:8px 0 12px!important;
-}
-
-.lead{
-  font-size:14px!important;
-  line-height:1.45!important;
-}
-
-.note{
-  font-size:12px!important;
-  line-height:1.4!important;
-  padding:10px 12px!important;
-}
-
-.q{
-  font-size:21px!important;
-  line-height:1.18!important;
-  margin:18px 0 7px!important;
-}
-
-.hint,
-.why{
-  font-size:12px!important;
-  line-height:1.4!important;
-}
-
-.opts{
-  gap:8px!important;
-  margin-top:12px!important;
-}
-
-.opt{
-  width:100%!important;
-  padding:12px!important;
-  font-size:13px!important;
-  line-height:1.3!important;
-  border-radius:12px!important;
-  white-space:normal!important;
-}
-
-.act{
-  gap:8px!important;
-  margin-top:14px!important;
-}
-
-.btn{
-  flex:1 1 0!important;
-  padding:11px 8px!important;
-  font-size:12px!important;
-}
-
-.event{
-  padding:13px!important;
-  border-radius:14px!important;
-  margin:9px 0!important;
-}
-
-.event h3{
-  font-size:18px!important;
-}
-
-.event p{
-  font-size:13px!important;
-  line-height:1.42!important;
-}
-
-.cta{
-  padding:15px!important;
-  border-radius:15px!important;
-}
-
-.cta a{
-  display:block!important;
-  text-align:center!important;
-}
-
-.small{
-  font-size:10px!important;
-}
-
-@media(max-width:380px){
-  h1{
-    font-size:27px!important;
+@media(max-width: 380px) {
+  .container {
+    padding: 8px;
   }
 
-  .q{
-    font-size:19px!important;
+  .card {
+    padding: 14px;
   }
 
-  .box{
-    padding:13px!important;
+  h1 {
+    font-size: 26px;
+  }
+
+  .question {
+    font-size: 19px;
+  }
+
+  .option {
+    font-size: 12px;
   }
 }
 </style>
@@ -342,59 +283,74 @@ h1{
 
 <body>
 
-<div class="wrap">
+<div class="container">
 
-  <div class="box">
+  <!-- ПРИВЕТСТВИЕ -->
 
-    <div class="eye">
-      Бесплатный мини-аудит
+  <div class="card">
+
+    <div class="kicker">
+      Бесплатный мини-аудит квартиры
     </div>
 
     <h1>
       Что рассказывает ваша квартира?
     </h1>
 
-    <p class="lead">
-      Ответьте на конкретные вопросы о планировке
-      и получите карту возможной ивентологии
-      пространства с точки зрения Васту.
+    <p>
+      Узнайте, какие особенности вашей квартиры
+      с точки зрения Васту могут поддерживать
+      финансовое благополучие, отношения,
+      стабильность и новые возможности.
+    </p>
+
+    <p>
+      Ответьте на 11 вопросов и получите
+      персональный обзор всех восьми направлений
+      и центра квартиры.
     </p>
 
     <div class="note">
-      Определите стороны света по компасу.
-      Экспресс-разбор не заменяет наложение
-      Васту-карты на точный план квартиры.
+      Перед началом определите стороны света
+      по компасу. Для более точного анализа
+      необходимо наложить Васту-карту
+      на план квартиры.
     </div>
 
   </div>
 
+  <!-- ТЕСТ -->
 
-  <div class="box" id="quiz">
+  <div class="card" id="quiz">
 
-    <div class="top">
-      <span id="st"></span>
-      <span id="pc"></span>
+    <div class="progress-info">
+      <span id="step"></span>
+      <span id="percent"></span>
     </div>
 
-    <div class="prog">
-      <i id="bar"></i>
+    <div class="progress">
+      <div class="progress-bar" id="bar"></div>
     </div>
 
-    <div id="screens"></div>
+    <h2 class="question" id="question"></h2>
 
-    <div class="act">
+    <div class="hint" id="hint"></div>
+
+    <div id="options"></div>
+
+    <div class="buttons">
 
       <button
-        id="back"
-        class="btn sec"
-        type="button">
+        type="button"
+        class="btn btn-back"
+        id="back">
         Назад
       </button>
 
       <button
-        id="next"
-        class="btn pri"
-        type="button">
+        type="button"
+        class="btn btn-main"
+        id="next">
         Дальше
       </button>
 
@@ -402,983 +358,833 @@ h1{
 
   </div>
 
+  <!-- РЕЗУЛЬТАТЫ -->
 
-  <div class="box res" id="res">
+  <div class="card" id="result">
 
-    <span class="badge">
-      Персональная карта готова
-    </span>
+    <div class="kicker">
+      Ваш персональный мини-разбор
+    </div>
 
     <h2>
-      Возможная ивентология вашей квартиры
+      Карта вашей квартиры
     </h2>
 
-    <p
-      class="lead"
-      id="intro">
+    <p>
+      Ниже вы увидите анализ каждого направления:
+      какие качества оно символизирует,
+      что может поддерживать благоприятное
+      состояние сектора и какие сложности
+      связывают с его нарушениями
+      в традиции Васту.
     </p>
 
-    <div id="events"></div>
-
+    <div id="sector-results"></div>
 
     <div class="cta">
 
-      <h3>
-        Нужен точный разбор?
-      </h3>
+      <h2>
+        Хотите узнать больше о своей квартире?
+      </h2>
 
       <p>
-        На большой консультации план анализируется
-        целиком: Васту + фэншуй, расстановка мебели,
-        оттенки интерьера и необходимые коррекции.
+        В мини-аудите мы рассмотрели основные
+        признаки планировки.
+      </p>
+
+      <p>
+        На индивидуальной консультации
+        я анализирую квартиру комплексно,
+        сочетая Васту и фэншуй.
+      </p>
+
+      <p>
+        Вы получаете рекомендации
+        по расстановке мебели,
+        оттенкам интерьера,
+        коррекциям пространства
+        и подходящим датам для их проведения.
       </p>
 
       <a
         href="https://taplink.cc/garmonia_v_dome/p/bfc513/"
         target="_blank"
         rel="noopener noreferrer">
-
         Хочу разбор квартиры
-
       </a>
 
     </div>
 
   </div>
 
-
-  <p class="small">
-    Результат показывает возможные тенденции
-    с точки зрения Васту и не является
-    гарантированным прогнозом событий.
-  </p>
+  <div class="footer">
+    Результаты отражают традиционные
+    интерпретации Васту и не являются
+    гарантированным прогнозом жизненных событий.
+  </div>
 
 </div>
 
-
 <script>
 
-const Q = [
+/* ======================================
+   ВОПРОСЫ
+====================================== */
 
-[
-  'nOpen',
-  'Что находится на Севере квартиры?',
-  'Посмотрите, насколько Север открыт для притока энергии.',
-  [
-    ['Есть окна / открытое пространство','open'],
-    ['Небольшое окно, зона частично закрыта','mid'],
-    ['Глухая стена, окон нет','closed'],
-    ['Не знаю','u']
-  ]
-],
+const questions = [
 
-[
-  'nLoad',
-  'Насколько заставлен Север?',
-  'Оцените крупную мебель и хранение.',
-  [
-    ['Свободный и лёгкий','light'],
-    ['Умеренно заполнен','mid'],
-    ['Много тяжёлой мебели','heavy'],
-    ['Не знаю','u']
-  ]
-],
+  {
+    sector: "Север",
+    text: "Есть ли на Севере квартиры окно или входная дверь?",
+    hint: "Выберите наиболее подходящий вариант.",
+    options: [
+      "Есть окно или несколько окон",
+      "Есть входная дверь",
+      "Есть и окно, и входная дверь",
+      "Нет ни окон, ни дверей",
+      "Не знаю"
+    ]
+  },
 
-[
-  'ne',
-  'Насколько свободен Северо-Восток?',
-  'Северо-Восток — одно из важных направлений притока энергии.',
-  [
-    ['Свободный и лёгкий','light'],
-    ['Умеренно заполнен','mid'],
-    ['Сильно заставлен тяжёлой мебелью','heavy'],
-    ['Не знаю','u']
-  ]
-],
+  {
+    sector: "Север",
+    text: "Насколько Север заставлен мебелью?",
+    hint: "Оцените наличие тяжёлых шкафов и мебели.",
+    options: [
+      "Свободный, мебель лёгкая",
+      "Умеренно заставлен",
+      "Много тяжёлой мебели и шкафов",
+      "Не знаю"
+    ]
+  },
 
-[
-  'k',
-  'Где находится кухня или её основная часть?',
-  'Выберите основной сектор.',
-  [
-    ['Юго-Восток','SE'],
-    ['Север','N'],
-    ['Северо-Восток','NE'],
-    ['Северо-Запад','NW'],
-    ['В другом секторе','O'],
-    ['Не знаю','u']
-  ]
-],
+  {
+    sector: "Северо-Восток",
+    text: "Что находится на Северо-Востоке квартиры?",
+    hint: "Выберите наиболее выраженный признак.",
+    options: [
+      "Окно или входная дверь, пространство свободно",
+      "Нет окон и дверей, но пространство свободно",
+      "Много тяжёлой мебели",
+      "Кухня или санузел",
+      "Не знаю"
+    ]
+  },
 
-[
-  'b',
-  'Где находится супружеская / основная спальня?',
-  'Если она занимает два сектора, выберите сектор большей части кровати.',
-  [
-    ['Юго-Запад','SW'],
-    ['Юг','S'],
-    ['Юго-Восток','SE'],
-    ['Северо-Запад','NW'],
-    ['В другом секторе','O'],
-    ['Не знаю','u']
-  ]
-],
+  {
+    sector: "Восток",
+    text: "Что находится на Востоке?",
+    hint: "Посмотрите на окна, двери и мебель.",
+    options: [
+      "Окно или входная дверь, пространство свободно",
+      "Нет окон и дверей",
+      "Много тяжёлой мебели",
+      "Санузел",
+      "Не знаю"
+    ]
+  },
 
-[
-  'sw',
-  'Есть ли на Юго-Западе санузел или заметный источник воды?',
-  'Юго-Запад связан с устойчивостью и опорой пространства.',
-  [
-    ['Нет','no'],
-    ['Есть санузел','wc'],
-    ['Есть другой источник воды','water'],
-    ['Не знаю','u']
-  ]
-],
+  {
+    sector: "Юго-Восток",
+    text: "Что находится на Юго-Востоке?",
+    hint: "Выберите основной признак.",
+    options: [
+      "Кухня",
+      "Окно или входная дверь",
+      "Балконная дверь",
+      "Спальня",
+      "Нет окон и дверей, сектор спокойный",
+      "Не знаю"
+    ]
+  },
 
-[
-  's',
-  'Насколько открыт Юг?',
-  'Юг относится к зоне оттока.',
-  [
-    ['Крупных открытостей нет','closed'],
-    ['Есть обычное окно','mid'],
-    ['Большие окна / дверь / балкон','open'],
-    ['Не знаю','u']
-  ]
-],
+  {
+    sector: "Юг",
+    text: "Есть ли на Юге окно или входная дверь?",
+    hint: "Учитывайте также выход на балкон.",
+    options: [
+      "Нет окон и дверей",
+      "Есть обычное окно",
+      "Есть входная или балконная дверь",
+      "Есть несколько окон и дверь",
+      "Не знаю"
+    ]
+  },
 
-[
-  'se',
-  'Что есть на Юго-Востоке?',
-  'Выберите наиболее выраженный признак.',
-  [
-    ['Кухня, без крупной открытости','k'],
-    ['Большое окно','win'],
-    ['Балкон / лоджия / выход','bal'],
-    ['Ничего из перечисленного','none'],
-    ['Не знаю','u']
-  ]
-],
+  {
+    sector: "Юго-Запад",
+    text: "Что находится на Юго-Западе?",
+    hint: "Выберите наиболее значимый объект.",
+    options: [
+      "Основная спальня",
+      "Тяжёлая мебель или шкафы",
+      "Санузел или источник воды",
+      "Окно или входная дверь",
+      "Не знаю"
+    ]
+  },
 
-[
-  'w',
-  'Что характерно для Запада?',
-  'Запад относится к зоне оттока.',
-  [
-    ['Закрытый и утяжелённый','closed'],
-    ['Обычное окно','win'],
-    ['Санузел','wc'],
-    ['Очень открытый / балкон','open'],
-    ['Не знаю','u']
-  ]
-],
+  {
+    sector: "Запад",
+    text: "Что находится на Западе?",
+    hint: "Оцените открытость и назначение помещения.",
+    options: [
+      "Тяжёлая мебель, нет окон и дверей",
+      "Обычное окно",
+      "Входная или балконная дверь",
+      "Санузел",
+      "Не знаю"
+    ]
+  },
 
-[
-  'nw',
-  'Что находится на Северо-Западе?',
-  'Северо-Запад связан с движением, переменами и коммуникацией.',
-  [
-    ['Свободная светлая зона / окно ближе к Северу','good'],
-    ['Кухня','k'],
-    ['Тяжёлая закрытая зона','heavy'],
-    ['Окно ближе к Западу / сильная открытость','win'],
-    ['Не знаю','u']
-  ]
-],
+  {
+    sector: "Северо-Запад",
+    text: "Что находится на Северо-Западе?",
+    hint: "Выберите основной признак.",
+    options: [
+      "Окно, свободное пространство",
+      "Кухня",
+      "Много тяжёлой мебели",
+      "Входная или балконная дверь",
+      "Не знаю"
+    ]
+  },
 
-[
-  'c',
-  'Что находится в центре квартиры — Брамастане?',
-  'Центр связывает остальные элементы.',
-  [
-    ['Свободный или почти свободный','free'],
-    ['Есть мебель, но проход сохраняется','mid'],
-    ['Крупная мебель / хранение / перегородка','block'],
-    ['Часть спальни или кровати','bed'],
-    ['Не знаю','u']
-  ]
-]
+  {
+    sector: "Центр",
+    text: "Что находится в центре квартиры?",
+    hint: "Центр квартиры в Васту называют Брамастаном.",
+    options: [
+      "Центр свободен",
+      "Немного мебели, проход свободен",
+      "Крупные шкафы или перегородки",
+      "Кровать или санузел",
+      "Не знаю"
+    ]
+  },
+
+  {
+    sector: "Спальня",
+    text: "Где находится основная спальня?",
+    hint: "Выберите сектор, где расположена большая часть спальни.",
+    options: [
+      "Юго-Запад",
+      "Юг",
+      "Юго-Восток",
+      "Северо-Запад",
+      "Другой сектор",
+      "Не знаю"
+    ]
+  }
 
 ];
 
 
-let A = {};
-let cur = 0;
+/* ======================================
+   ОПИСАНИЯ СЕКТОРОВ
+====================================== */
 
-const S =
-  document.getElementById('screens');
+const sectors = [
+
+  {
+    name: "Север",
+    questions: [0, 1],
+
+    meaning:
+      "В традиции Васту Север связывают с финансовыми возможностями, карьерой, новыми источниками дохода и движением ресурсов.",
+
+    positive:
+      "Свободный и открытый Север традиционно считается поддерживающим денежные возможности, продвижение проектов, развитие профессиональной деятельности и появление новых перспектив.",
+
+    negative:
+      "Если Север закрыт, лишён окон и дверей или перегружен тяжёлой мебелью, в трактовках Васту это связывают с финансовыми ограничениями. Возможные проявления — ощущение, что деньги достаются с большим трудом, возможности приходят медленнее, а продвижение в делах требует дополнительных усилий."
+  },
+
+  {
+    name: "Северо-Восток",
+    questions: [2],
+
+    meaning:
+      "Северо-Восток в Васту связывают с ясностью мышления, благоприятными начинаниями, развитием и внутренней гармонией.",
+
+    positive:
+      "Свободный и светлый Северо-Восток традиционно рассматривается как поддержка новых идей, ясности решений, развития и способности замечать перспективные возможности.",
+
+    negative:
+      "Если Северо-Восток перегружен тяжёлой мебелью, занят кухней или санузлом, в некоторых трактовках Васту это связывают с затруднениями в начинаниях, ощущением неопределённости и сложностями в выборе направления развития."
+  },
+
+  {
+    name: "Восток",
+    questions: [3],
+
+    meaning:
+      "Восток традиционно связывают с активностью, признанием, жизненной энергией, развитием и проявленностью человека.",
+
+    positive:
+      "Светлый, свободный Восток с окнами или дверью считается благоприятным признаком для активности, инициативности, продвижения идей и самореализации.",
+
+    negative:
+      "Закрытый или перегруженный Восток в традиционных интерпретациях может символизировать препятствия для самореализации, трудности с проявлением инициативы и ощущение недостаточного признания."
+  },
+
+  {
+    name: "Юго-Восток",
+    questions: [4],
+
+    meaning:
+      "Юго-Восток в Васту связывают со стихией Огня, активностью, преобразованиями и энергией действий.",
+
+    positive:
+      "Кухня на Юго-Востоке традиционно считается благоприятным размещением. Сектор символически поддерживает активность, способность действовать и доводить начатое до результата.",
+
+    negative:
+      "Спальня, входная дверь или выраженная открытость на Юго-Востоке в некоторых школах Васту могут трактоваться как признаки избыточной активности стихии Огня или ослабления устойчивости сектора. Возможные проявления в таких трактовках — повышенная раздражительность, напряжение в отношениях и сложности с удержанием ресурсов."
+  },
+
+  {
+    name: "Юг",
+    questions: [5],
+
+    meaning:
+      "Юг в традиции Васту связывают с устойчивостью, дисциплиной, сохранением накопленного и способностью удерживать результаты.",
+
+    positive:
+      "Более закрытый и спокойный Юг традиционно считается поддерживающим стабильность, последовательность, уверенность в решениях и сохранение ресурсов.",
+
+    negative:
+      "Большое количество окон, входная или балконная дверь на Юге в отдельных трактовках Васту могут символизировать ослабление способности удерживать ресурсы. Возможные проявления — ощущение финансовой нестабильности или частые незапланированные расходы."
+  },
+
+  {
+    name: "Юго-Запад",
+    questions: [6],
+
+    meaning:
+      "Юго-Запад связывают с устойчивостью, материальной опорой, накоплениями, семейной стабильностью и долгосрочными решениями.",
+
+    positive:
+      "Основная спальня или тяжёлая мебель на Юго-Западе традиционно считаются благоприятными признаками. Такое расположение символически поддерживает устойчивость, уверенность и способность сохранять достигнутое.",
+
+    negative:
+      "Санузел, источник воды или входная дверь на Юго-Западе в традиционных трактовках могут символизировать ослабление устойчивости. Это связывают с трудностями накопления ресурсов, ощущением недостаточной опоры и нестабильностью долгосрочных планов."
+  },
+
+  {
+    name: "Запад",
+    questions: [7],
+
+    meaning:
+      "Запад в Васту связывают с завершением дел, дисциплиной, сохранением результатов, организацией и отношением ко времени.",
+
+    positive:
+      "Спокойный, устойчивый Запад с умеренной или тяжёлой мебелью традиционно считается поддерживающим организованность, последовательность и способность доводить дела до завершения.",
+
+    negative:
+      "Санузел или выраженная открытость Запада в некоторых трактовках связываются со сложностями планирования, ощущением нехватки времени, незавершёнными делами и трудностями с сохранением результатов."
+  },
+
+  {
+    name: "Северо-Запад",
+    questions: [8],
+
+    meaning:
+      "Северо-Запад связывают со стихией Воздуха, движением, общением, переменами, поездками и социальными контактами.",
+
+    positive:
+      "Лёгкий, свободный Северо-Запад с окнами традиционно считается поддерживающим гибкость, общение, полезные знакомства, своевременные перемены и движение вперёд.",
+
+    negative:
+      "Перегруженный Северо-Запад или негармоничное расположение кухни в некоторых школах Васту связывают с затруднениями перемен, нестабильностью и задержками в развитии социальных или семейных событий."
+  },
+
+  {
+    name: "Центр",
+    questions: [9],
+
+    meaning:
+      "Центр квартиры — Брамастан — в традиции Васту символизирует баланс и взаимосвязь всех частей пространства.",
+
+    positive:
+      "Свободный центр традиционно считается поддерживающим гармоничное взаимодействие разных зон квартиры, ощущение порядка, ясности и согласованности происходящего.",
+
+    negative:
+      "Загромождённый центр, крупные шкафы, перегородки или санузел в Брамастане в традиционных трактовках связывают с ощущением застоя, трудностями продвижения дел и недостатком согласованности в пространстве."
+  }
+
+];
 
 
-Q.forEach((x,i)=>{
+/* ======================================
+   ОЦЕНКА ОТВЕТОВ
+====================================== */
 
-  let d =
-    document.createElement('div');
+const negativeAnswers = {
 
-  d.className =
-    'scr' + (i ? '' : ' on');
+  "Север": {
+    0: [3],
+    1: [2]
+  },
 
+  "Северо-Восток": {
+    2: [2, 3]
+  },
 
-  d.innerHTML = `
+  "Восток": {
+    3: [1, 2, 3]
+  },
 
-    <h2 class="q">
-      ${x[1]}
-    </h2>
+  "Юго-Восток": {
+    4: [1, 2, 3]
+  },
 
-    <p class="hint">
-      ${x[2]}
-    </p>
+  "Юг": {
+    5: [2, 3]
+  },
 
-    <div class="opts">
+  "Юго-Запад": {
+    6: [2, 3]
+  },
 
-      ${x[3].map(o=>`
+  "Запад": {
+    7: [2, 3]
+  },
 
-        <button
-          type="button"
-          class="opt"
-          data-v="${o[1]}">
+  "Северо-Запад": {
+    8: [1, 2, 3]
+  },
 
-          ${o[0]}
+  "Центр": {
+    9: [2, 3]
+  }
 
-        </button>
+};
 
-      `).join('')}
+const unknownAnswers = {
 
-    </div>
+  "Север": {
+    0: [4],
+    1: [3]
+  },
 
-  `;
+  "Северо-Восток": {
+    2: [4]
+  },
 
+  "Восток": {
+    3: [4]
+  },
 
-  d.querySelectorAll('.opt')
-    .forEach(b=>{
+  "Юго-Восток": {
+    4: [5]
+  },
 
-      b.onclick = ()=>{
+  "Юг": {
+    5: [4]
+  },
 
-        d.querySelectorAll('.opt')
-          .forEach(z=>
-            z.classList.remove('sel')
-          );
+  "Юго-Запад": {
+    6: [4]
+  },
 
-        b.classList.add('sel');
+  "Запад": {
+    7: [4]
+  },
 
-        A[x[0]] =
-          b.dataset.v;
+  "Северо-Запад": {
+    8: [4]
+  },
 
-        refresh();
+  "Центр": {
+    9: [4]
+  }
 
-      };
-
-    });
-
-
-  S.appendChild(d);
-
-});
-
-
-const st =
-  document.getElementById('st');
-
-const pc =
-  document.getElementById('pc');
-
-const bar =
-  document.getElementById('bar');
-
-const back =
-  document.getElementById('back');
-
-const next =
-  document.getElementById('next');
-
-const quiz =
-  document.getElementById('quiz');
-
-const res =
-  document.getElementById('res');
-
-const intro =
-  document.getElementById('intro');
-
-const events =
-  document.getElementById('events');
+};
 
 
-function refresh(){
+/* ======================================
+   ЛОГИКА ТЕСТА
+====================================== */
 
-  document
-    .querySelectorAll('.scr')
-    .forEach((s,i)=>
-      s.classList.toggle(
-        'on',
-        i === cur
-      )
-    );
+let answers = {};
+let current = 0;
 
+const el = id => document.getElementById(id);
 
-  let p =
-    Math.round(
-      cur / Q.length * 100
-    );
+function renderQuestion() {
 
+  const q = questions[current];
 
-  st.textContent =
-    `Вопрос ${cur+1} из ${Q.length}`;
+  el("step").textContent =
+    "Вопрос " + (current + 1) +
+    " из " + questions.length;
 
-  pc.textContent =
-    p + '%';
+  el("percent").textContent =
+    Math.round(current / questions.length * 100) + "%";
 
-  bar.style.width =
-    p + '%';
+  el("bar").style.width =
+    (current / questions.length * 100) + "%";
 
-  back.disabled =
-    !cur;
+  el("question").textContent = q.text;
 
-  next.disabled =
-    !A[Q[cur][0]];
+  el("hint").textContent =
+    q.sector + " · " + q.hint;
 
-  next.textContent =
-    cur === Q.length-1
-      ? 'Показать разбор'
-      : 'Дальше';
+  const optionsBox = el("options");
+
+  optionsBox.replaceChildren();
+
+  q.options.forEach((option, index) => {
+
+    const button = document.createElement("button");
+
+    button.type = "button";
+
+    button.className =
+      "option" +
+      (answers[current] === index ? " selected" : "");
+
+    button.textContent = option;
+
+    button.onclick = function() {
+
+      answers[current] = index;
+
+      renderQuestion();
+
+    };
+
+    optionsBox.appendChild(button);
+
+  });
+
+  el("back").disabled = current === 0;
+
+  el("next").disabled =
+    answers[current] === undefined;
+
+  el("next").textContent =
+    current === questions.length - 1
+      ? "Получить разбор"
+      : "Дальше";
 
 }
 
 
-back.onclick = ()=>{
+el("back").onclick = function() {
 
-  if(cur > 0){
+  if (current > 0) {
 
-    cur--;
+    current--;
 
-    refresh();
+    renderQuestion();
 
   }
 
 };
 
 
-next.onclick = ()=>{
+el("next").onclick = function() {
 
-  if(
-    !A[Q[cur][0]]
-  ){
+  if (answers[current] === undefined) {
     return;
   }
 
-  if(
-    cur < Q.length-1
-  ){
+  if (current < questions.length - 1) {
 
-    cur++;
+    current++;
 
-    refresh();
+    renderQuestion();
 
-  }else{
+  } else {
 
-    build();
+    showResults();
 
   }
 
 };
 
 
-function build(){
+/* ======================================
+   СОЗДАНИЕ РЕЗУЛЬТАТОВ
+====================================== */
 
-  let e = [];
+function addParagraph(parent, text, className) {
 
+  const p = document.createElement("p");
 
-  const add =
-    (title,text,comment,level=2)=>{
-
-      e.push([
-        title,
-        text,
-        comment,
-        level
-      ]);
-
-    };
-
-
-  /*
-  СЕВЕР + СЕВЕРО-ВОСТОК
-  */
-
-  if(
-    A.nOpen === 'closed' ||
-    A.nLoad === 'heavy' ||
-    A.ne === 'heavy'
-  ){
-
-    let strong =
-
-      A.nOpen === 'closed' &&
-      A.nLoad === 'heavy' &&
-      A.ne === 'heavy';
-
-
-    add(
-
-      'Финансы, возможности и самореализация',
-
-      strong
-
-      ?
-
-      `Север закрыт, а Север и Северо-Восток
-      утяжелены.
-
-      Такое сочетание может ослаблять
-      элемент Воды.
-
-      Возможная событийность:
-      материальные возможности могут
-      приходить труднее,
-      финансовый поток ощущаться
-      недостаточным,
-      а продвижение себя и своих услуг
-      требовать больше усилий.`
-
-      :
-
-      `Есть признаки ослабления зон притока.
-
-      Это может проявляться так,
-      что возможности и материальное
-      процветание приходят
-      менее свободно.`,
-
-      `Закрытый и перегруженный Север
-      и Северо-Восток могут затруднять
-      свободный приток энергии.`,
-
-      strong ? 4 : 3
-
-    );
-
+  if (className) {
+    p.className = className;
   }
 
+  p.textContent = text;
 
-  /*
-  КУХНЯ
-  */
+  parent.appendChild(p);
 
-  if(A.k === 'N'){
+}
 
-    add(
 
-      'Кухня на Севере',
+function addDescription(parent, label, text, type) {
 
-      `Кухня на Севере может ослаблять
-      благоприятные качества этого сектора.
+  const box = document.createElement("div");
 
-      Возможное проявление —
-      желания женщины в доме
-      могут реализовываться труднее.`,
+  box.className = type;
 
-      `Этот фактор стоит рассматривать
-      вместе с состоянием всего
-      Северного сектора.`,
+  const heading = document.createElement("div");
 
-      3
+  heading.className = "sector-label";
 
+  heading.textContent = label;
+
+  box.appendChild(heading);
+
+  addParagraph(box, text);
+
+  parent.appendChild(box);
+
+}
+
+
+function showResults() {
+
+  el("quiz").style.display = "none";
+
+  el("result").style.display = "block";
+
+  const output = el("sector-results");
+
+  output.replaceChildren();
+
+
+  sectors.forEach(sector => {
+
+    const card = document.createElement("div");
+
+    card.className = "sector";
+
+    const title = document.createElement("h3");
+
+    title.textContent = sector.name;
+
+    card.appendChild(title);
+
+
+    let hasNegative = false;
+    let knownCount = 0;
+
+    const selected = [];
+
+
+    sector.questions.forEach(questionIndex => {
+
+      const answerIndex = answers[questionIndex];
+
+      if (answerIndex === undefined) {
+        return;
+      }
+
+      const unknownList =
+        (unknownAnswers[sector.name] || {})[questionIndex] || [];
+
+      const negativeList =
+        (negativeAnswers[sector.name] || {})[questionIndex] || [];
+
+
+      if (!unknownList.includes(answerIndex)) {
+        knownCount++;
+      }
+
+      if (negativeList.includes(answerIndex)) {
+        hasNegative = true;
+      }
+
+      selected.push(
+        questions[questionIndex].text +
+        " — " +
+        questions[questionIndex].options[answerIndex]
+      );
+
+    });
+
+
+    const status = document.createElement("span");
+
+    status.className = "status";
+
+    if (hasNegative) {
+
+      status.textContent = "Есть моменты для внимания";
+
+    } else if (knownCount === 0) {
+
+      status.textContent = "Требуется уточнение";
+
+    } else {
+
+      status.textContent = "Есть поддерживающие признаки";
+
+    }
+
+    card.appendChild(status);
+
+
+    addParagraph(
+      card,
+      sector.meaning
     );
 
-  }
 
-
-  if(A.k === 'NE'){
-
-    add(
-
-      'Кухня на Северо-Востоке',
-
-      `Кухня на Северо-Востоке
-      может ослаблять благоприятные
-      качества одного из ключевых
-      направлений притока.
-
-      Это может отражаться
-      на ощущении возможностей,
-      ясности и продвижения.`,
-
-      `Особенно важно учитывать,
-      насколько Северо-Восток открыт,
-      свободен и не перегружен.`,
-
-      3
-
+    addParagraph(
+      card,
+      "По вашим ответам: " + selected.join("; ") + ".",
+      "small"
     );
 
-  }
 
+    if (hasNegative) {
+
+      addDescription(
+        card,
+        "На что стоит обратить внимание",
+        sector.negative,
+        "negative"
+      );
+
+      addDescription(
+        card,
+        "Что может поддерживать этот сектор",
+        sector.positive,
+        "positive"
+      );
+
+    } else if (knownCount === 0) {
+
+      addParagraph(
+        card,
+        "Для оценки этого сектора недостаточно данных. " +
+        "Необходимо уточнить расположение помещений, " +
+        "окон, дверей и мебели.",
+        "small"
+      );
+
+      addDescription(
+        card,
+        "Благоприятное состояние сектора",
+        sector.positive,
+        "positive"
+      );
+
+    } else {
+
+      addDescription(
+        card,
+        "Возможные положительные проявления",
+        sector.positive,
+        "positive"
+      );
+
+      addDescription(
+        card,
+        "Что важно учитывать",
+        sector.negative,
+        "negative"
+      );
+
+    }
+
+
+    /* Дополнительный анализ спальни */
+
+    if (
+      sector.name === "Юго-Восток" &&
+      answers[10] === 2
+    ) {
+
+      addDescription(
+        card,
+        "Дополнительно о спальне",
+        "Основная спальня на Юго-Востоке " +
+        "в некоторых трактовках Васту " +
+        "связывается с повышенным напряжением " +
+        "и эмоциональностью в отношениях.",
+        "negative"
+      );
+
+    }
+
+
+    if (
+      sector.name === "Юго-Запад" &&
+      answers[10] === 0
+    ) {
+
+      addDescription(
+        card,
+        "Дополнительный благоприятный признак",
+        "Основная спальня расположена " +
+        "на Юго-Западе. В традиции Васту " +
+        "это считается поддерживающим " +
+        "признаком для устойчивости " +
+        "и семейной стабильности.",
+        "positive"
+      );
+
+    }
+
+
+    if (
+      sector.name === "Юг" &&
+      answers[10] === 1
+    ) {
+
+      addParagraph(
+        card,
+        "Дополнительно: основная спальня " +
+        "расположена на Юге. Для более точной " +
+        "оценки важно учитывать положение " +
+        "кровати и планировку всего помещения.",
+        "small"
+      );
 
-  if(A.k === 'NW'){
+    }
 
-    add(
 
-      'Перемены и семейная событийность',
+    if (
+      sector.name === "Северо-Запад" &&
+      answers[10] === 3
+    ) {
 
-      `Кухня на Северо-Западе
-      может ослаблять элемент Воздуха.
+      addParagraph(
+        card,
+        "Дополнительно: основная спальня " +
+        "расположена на Северо-Западе. " +
+        "В традиционных трактовках это " +
+        "может связываться с большей " +
+        "подвижностью и переменчивостью.",
+        "small"
+      );
 
-      Возможная событийность —
-      перемены могут идти сложнее.
+    }
 
-      В семейной сфере у дочерей
-      могут возникать задержки
-      или сложности с устройством
-      личной жизни.`,
 
-      `Этот фактор лучше оценивать
-      вместе со всей конфигурацией
-      Северо-Запада.`,
+    output.appendChild(card);
 
-      3
+  });
 
-    );
 
-  }
-
-
-  if(A.k === 'SE'){
-
-    add(
-
-      'Юго-Восток поддержан функцией кухни',
-
-      `Кухня на Юго-Востоке
-      поддерживает естественную
-      функцию этого сектора
-      и является благоприятным признаком.`,
-
-      `Это один из поддерживающих
-      признаков планировки.`,
-
-      1
-
-    );
-
-  }
-
-
-  /*
-  СПАЛЬНЯ
-  */
-
-  if(A.b === 'SW'){
-
-    add(
-
-      'Спальня и устойчивость',
-
-      `Юго-Запад считается
-      благоприятным местом
-      для спальни хозяев дома.
-
-      Такое расположение может
-      поддерживать устойчивость
-      и стабильность.`,
-
-      `Это один из поддерживающих
-      признаков планировки.`,
-
-      1
-
-    );
-
-  }
-
-
-  if(A.b === 'SE'){
-
-    add(
-
-      'Отношения в паре',
-
-      `Супружеская спальня
-      на Юго-Востоке может усиливать
-      напряжение и огненность
-      в отношениях.
-
-      Возможное проявление —
-      больше споров,
-      раздражительности
-      и конфликтности в паре.`,
-
-      `Один этот фактор
-      не определяет отношения —
-      важно смотреть квартиру целиком.`,
-
-      4
-
-    );
-
-  }
-
-
-  if(A.b === 'S'){
-
-    add(
-
-      'Спальня на Юге',
-
-      `Спальня на Юге требует
-      дополнительной проверки.
-
-      Возможное влияние зависит
-      от положения кровати
-      и сочетания Южного сектора
-      с остальной квартирой.`,
-
-      `Окончательный вывод лучше
-      делать по полному плану.`,
-
-      2
-
-    );
-
-  }
-
-
-  /*
-  ЮГО-ЗАПАД
-  */
-
-  if(A.sw === 'wc'){
-
-    add(
-
-      'Стабильность и материальная опора',
-
-      `Санузел на Юго-Западе
-      может ослаблять элемент Земли.
-
-      Возможное проявление —
-      меньше ощущения стабильности,
-      опоры и устойчивости
-      в материальных вопросах.`,
-
-      `Особенно важно оценить
-      и другие признаки
-      Юго-Западного сектора.`,
-
-      4
-
-    );
-
-  }
-
-
-  if(A.sw === 'water'){
-
-    add(
-
-      'Материальная устойчивость',
-
-      `Источник воды
-      на Юго-Западе
-      может ослаблять элемент Земли.
-
-      Это может проявляться
-      как меньшая стабильность
-      и устойчивость
-      в материальной сфере.`,
-
-      `Этот признак лучше рассматривать
-      вместе с открытостью
-      и наполнением Юго-Запада.`,
-
-      3
-
-    );
-
-  }
-
-
-  /*
-  ЮГ
-  */
-
-  if(A.s === 'open'){
-
-    add(
-
-      'Удержание ресурсов',
-
-      `Сильная открытость Юга
-      может ослаблять
-      устойчивость пространства.
-
-      Возможное проявление —
-      ресурсы и деньги
-      сложнее удерживать,
-      могут чаще возникать
-      незапланированные расходы.`,
-
-      `Чем сильнее открыт
-      Южный сектор,
-      тем важнее оценить его
-      в контексте всей квартиры.`,
-
-      3
-
-    );
-
-  }
-
-
-  /*
-  ЮГО-ВОСТОК
-  */
-
-  if(
-    A.se === 'win' ||
-    A.se === 'bal'
-  ){
-
-    add(
-
-      'Юго-Восток требует внимания',
-
-      `Большая открытость,
-      окно или выход на балкон
-      на Юго-Востоке
-      могут усиливать
-      отток энергии
-      из этого сектора.
-
-      Это может отражаться
-      на устойчивости дел
-      и способности удерживать
-      накопленные ресурсы.`,
-
-      `Этот фактор требует оценки
-      вместе с назначением
-      и наполнением сектора.`,
-
-      3
-
-    );
-
-  }
-
-
-  /*
-  ЗАПАД
-  */
-
-  if(A.w === 'wc'){
-
-    add(
-
-      'Организация и время',
-
-      `Санузел на Западе
-      может проявляться
-      сложностями с организованностью,
-      планированием
-      и отношением ко времени.`,
-
-      `Один этот признак
-      не определяет общий результат —
-      важно сочетание факторов.`,
-
-      2
-
-    );
-
-  }
-
-
-  /*
-  СЕВЕРО-ЗАПАД
-  */
-
-  if(A.nw === 'k'){
-
-    add(
-
-      'Перемены и отношения',
-
-      `Кухня на Северо-Западе
-      может ослаблять элемент Воздуха.
-
-      Возможное проявление —
-      перемены происходят сложнее,
-      а в семейной и социальной сфере
-      может ощущаться больше
-      нестабильности.`,
-
-      `Северо-Запад лучше оценивать
-      вместе с окнами,
-      открытостью
-      и назначением помещения.`,
-
-      3
-
-    );
-
-  }
-
-
-  /*
-  ЦЕНТР
-  */
-
-  if(
-    A.c === 'block' ||
-    A.c === 'bed'
-  ){
-
-    add(
-
-      'Центр и общий ход событий',
-
-      `Перегруженный или занятый
-      Брамастан может мешать
-      свободному взаимодействию
-      энергий квартиры.
-
-      Возможное проявление —
-      ощущение,
-      что события,
-      возможности
-      и нужные изменения
-      словно не складываются
-      или тормозятся.`,
-
-      `Центр квартиры
-      особенно важно оценивать
-      по точному плану.`,
-
-      4
-
-    );
-
-  }
-
-
-  /*
-  ЕСЛИ НЕТ СИЛЬНЫХ СИГНАЛОВ
-  */
-
-  if(!e.length){
-
-    add(
-
-      'Явных сигналов немного',
-
-      `Этот короткий аудит
-      не выявил выраженных факторов
-      из тех, которые он проверяет.
-
-      При этом здесь
-      не анализируются точные градусы,
-      вход, форма квартиры,
-      расширения, срезы
-      и полная Васту-карта.`,
-
-      `Для более точного вывода
-      нужен полный план квартиры.`,
-
-      1
-
-    );
-
-  }
-
-
-  e.sort(
-    (a,b)=>
-      b[3] - a[3]
-  );
-
-
-  intro.textContent =
-
-    e.some(
-      x=>x[3] >= 4
-    )
-
-    ?
-
-    `В вашей квартире есть сочетания,
-    которые могут заметно влиять
-    на отдельные сферы жизни.
-
-    Ниже — персональная карта
-    возможной событийности,
-    а не общий балл.`
-
-    :
-
-    `Ниже — возможные проявления,
-    которые соответствуют
-    особенностям квартиры,
-    указанным в ваших ответах.`;
-
-
-
-  events.innerHTML =
-
-    e.map(x=>{
-
-      let label =
-
-        x[3] >= 4
-        ? 'Важная точка'
-
-        : x[3] === 3
-        ? 'Стоит проверить'
-
-        : x[3] === 2
-        ? 'Дополнительный фактор'
-
-        : 'Поддерживающий признак';
-
-
-      return `
-
-        <div class="event">
-
-          <span class="badge">
-            ${label}
-          </span>
-
-          <h3>
-            ${x[0]}
-          </h3>
-
-          <p>
-            ${x[1]}
-          </p>
-
-          <div class="why">
-            ${x[2]}
-          </div>
-
-        </div>
-
-      `;
-
-    }).join('');
-
-
-  quiz.style.display =
-    'none';
-
-  res.classList.add('on');
-
-  res.scrollIntoView({
-    behavior:'smooth'
+  el("result").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
   });
 
 }
 
 
-refresh();
+/* ======================================
+   ЗАПУСК
+====================================== */
+
+renderQuestion();
 
 </script>
 
